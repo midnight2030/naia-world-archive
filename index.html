@@ -37,6 +37,35 @@ section{padding:100px 22px;position:relative}.section-inner{width:min(100%,980px
 .library-record h3{margin:0 0 14px;font-family:serif;font-size:clamp(19px,2.5vw,25px);font-weight:400;letter-spacing:.08em;color:#fff0d9}
 .library-record p{color:#d7d3e8;font-size:13px;line-height:2;word-break:keep-all;margin:0 0 14px}
 .library-record-message{margin:0;color:#c6c4df;font-size:13px;line-height:1.9}
+.place-record{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start}
+.place-category{padding:18px;border:1px solid rgba(197,170,231,.25);background:rgba(9,10,35,.3)}
+.place-category+.place-category{margin-top:16px}
+.place-category-title{margin:0 0 14px;color:#e6d5ff;font-family:serif;font-size:17px;font-weight:400;letter-spacing:.1em}
+.place-bookmarks{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.place-bookmark{position:relative;display:flex;flex:0 0 76px;width:76px;min-height:104px;align-items:center;justify-content:flex-start;flex-direction:column;gap:7px;padding:15px 7px 18px;border:1px solid rgba(255,220,177,.58);border-bottom:0;clip-path:polygon(0 0,100% 0,100% 86%,50% 100%,0 86%);background:linear-gradient(155deg,rgba(105,77,151,.96),rgba(48,39,91,.98));color:#fff0dc;cursor:pointer;box-shadow:0 7px 15px rgba(0,0,0,.25);transition:transform .18s ease,filter .18s ease,background .18s ease}
+.place-bookmark:before{content:"";position:absolute;inset:5px 5px 16px;border:1px solid rgba(255,223,180,.32);pointer-events:none}
+.place-bookmark:hover,.place-bookmark:focus-visible{transform:translateY(-5px);filter:brightness(1.18);outline:2px solid rgba(222,190,255,.55);outline-offset:2px}
+.place-bookmark[aria-pressed="true"]{background:linear-gradient(155deg,rgba(157,112,190,.99),rgba(67,49,116,.99));border-color:#ffe1b2;box-shadow:0 0 19px rgba(189,144,255,.27),0 8px 18px rgba(0,0,0,.35)}
+.place-bookmark-icon{font-size:18px;line-height:1;color:#f4d39f;text-shadow:0 0 10px rgba(255,211,148,.7)}
+.place-bookmark-name{font-size:11px;font-weight:700;letter-spacing:.02em;line-height:1.4;text-align:center;word-break:keep-all}
+.place-bookmark-sub{font-size:8px;color:#d6c6e9;letter-spacing:.08em;text-align:center}
+.place-bookmark:disabled{cursor:not-allowed;opacity:.42;filter:saturate(.45);background:linear-gradient(155deg,rgba(67,64,91,.8),rgba(31,31,55,.9));box-shadow:none}
+.place-bookmark:disabled:hover{transform:none;filter:saturate(.45)}
+.place-details{min-height:246px;padding:24px 24px 22px;border:1px solid rgba(197,170,231,.34);background:linear-gradient(145deg,rgba(28,24,66,.85),rgba(13,15,43,.86));box-shadow:inset 0 0 24px rgba(148,116,210,.07),0 12px 30px rgba(0,0,0,.2)}
+.place-details-kicker{margin:0 0 12px!important;color:#d0b6f2!important;font-size:9px!important;letter-spacing:.24em}
+.place-details h4{margin:0 0 12px;color:#fff0d9;font-family:serif;font-size:clamp(20px,2.6vw,26px);font-weight:400;letter-spacing:.08em}
+.place-details p{margin:0;color:#cfccdf;font-size:13px;line-height:1.9}
+.place-locked-note{margin-top:14px!important;color:#a7a0bc!important;font-size:11px!important}
+@media(max-width:700px){
+.place-record{grid-template-columns:1fr;gap:16px}
+.place-category{padding:14px 12px}
+.place-category-title{font-size:15px;margin-bottom:12px}
+.place-bookmarks{gap:9px}
+.place-bookmark{flex-basis:68px;width:68px;min-height:94px;padding:13px 5px 16px}
+.place-bookmark-name{font-size:10px}
+.place-details{min-height:160px;padding:20px 16px}
+}
+@media(prefers-reduced-motion:reduce){.place-bookmark{transition:none}}
 .world-record-content{display:block}
 .world-record-content .opening-copy{max-width:560px;margin-left:auto;padding-left:12px}
 .world-record-content figure{width:100%;max-width:650px;margin:24px auto}
@@ -124,6 +153,58 @@ const libraryRecord = document.querySelector('.library-record');
 const libraryRecordTitle = document.getElementById('library-record-title');
 const libraryRecordContent = document.getElementById('library-record-content');
 
+const placeRecordMarkup = `
+  <div class="place-record">
+    <div class="place-navigation">
+      <section class="place-category" aria-labelledby="village-category-title">
+        <h4 class="place-category-title" id="village-category-title">마을</h4>
+        <div class="place-bookmarks">
+          <button class="place-bookmark" type="button" data-place="에르훗" data-category="마을" aria-pressed="true">
+            <span class="place-bookmark-icon" aria-hidden="true">✦</span>
+            <span class="place-bookmark-name">에르훗</span>
+            <span class="place-bookmark-sub">ERHUT</span>
+          </button>
+          <button class="place-bookmark" type="button" disabled aria-label="잠긴 마을 기록">
+            <span class="place-bookmark-icon" aria-hidden="true">🔒</span>
+            <span class="place-bookmark-name">미개방</span>
+            <span class="place-bookmark-sub">LOCKED</span>
+          </button>
+          <button class="place-bookmark" type="button" disabled aria-label="잠긴 마을 기록">
+            <span class="place-bookmark-icon" aria-hidden="true">🔒</span>
+            <span class="place-bookmark-name">미개방</span>
+            <span class="place-bookmark-sub">LOCKED</span>
+          </button>
+        </div>
+      </section>
+      <section class="place-category" aria-labelledby="exploration-category-title">
+        <h4 class="place-category-title" id="exploration-category-title">탐험지</h4>
+        <div class="place-bookmarks">
+          <button class="place-bookmark" type="button" data-place="고요한 평원" data-category="탐험지" aria-pressed="false">
+            <span class="place-bookmark-icon" aria-hidden="true">✦</span>
+            <span class="place-bookmark-name">고요한 평원</span>
+            <span class="place-bookmark-sub">QUIET PLAIN</span>
+          </button>
+          <button class="place-bookmark" type="button" disabled aria-label="잠긴 탐험지 기록">
+            <span class="place-bookmark-icon" aria-hidden="true">🔒</span>
+            <span class="place-bookmark-name">미개방</span>
+            <span class="place-bookmark-sub">LOCKED</span>
+          </button>
+          <button class="place-bookmark" type="button" disabled aria-label="잠긴 탐험지 기록">
+            <span class="place-bookmark-icon" aria-hidden="true">🔒</span>
+            <span class="place-bookmark-name">미개방</span>
+            <span class="place-bookmark-sub">LOCKED</span>
+          </button>
+        </div>
+      </section>
+    </div>
+    <section class="place-details" aria-live="polite">
+      <p class="place-details-kicker" id="place-details-category">마을 · VILLAGE</p>
+      <h4 id="place-details-title">에르훗</h4>
+      <p id="place-details-message">에르훗의 장소 기록을 이곳에서 확인할 수 있습니다.</p>
+    </section>
+  </div>
+`;
+
 const worldRecordMarkup = `
   <div class="world-record-content">
     <div class="opening-copy">
@@ -182,6 +263,17 @@ document.querySelectorAll('.library-book').forEach((book) => {
         const afterAnswer = document.getElementById('world-after-answer');
         afterAnswer.classList.add('is-visible');
         afterAnswer.scrollIntoView({behavior:'smooth',block:'nearest'});
+      });
+    } else if (book.dataset.title === '장소') {
+      libraryRecordContent.innerHTML = placeRecordMarkup;
+      const placeBookmarks = document.querySelectorAll('.place-bookmark[data-place]');
+      placeBookmarks.forEach((bookmark) => {
+        bookmark.addEventListener('click', () => {
+          placeBookmarks.forEach((item) => item.setAttribute('aria-pressed', String(item === bookmark)));
+          document.getElementById('place-details-category').textContent = bookmark.dataset.category + (bookmark.dataset.category === '마을' ? ' · VILLAGE' : ' · EXPLORATION');
+          document.getElementById('place-details-title').textContent = bookmark.dataset.place;
+          document.getElementById('place-details-message').textContent = bookmark.dataset.place + '의 장소 기록을 이곳에서 확인할 수 있습니다.';
+        });
       });
     } else {
       libraryRecordContent.innerHTML = '<p class="library-record-message">이 분류의 기록이 추가되면 이곳에서 확인할 수 있습니다.</p>';
