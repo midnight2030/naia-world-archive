@@ -29,11 +29,14 @@ section{padding:100px 22px;position:relative}.section-inner{width:min(100%,980px
 .library-book[aria-pressed="true"]{transform:translateY(-9px);border-color:#fff4d0;background:linear-gradient(145deg,rgba(151,102,185,.99),rgba(68,48,113,.99) 62%,rgba(42,34,84,.99));box-shadow:inset 0 0 0 2px rgba(255,241,201,.36),0 0 24px rgba(255,207,148,.42),0 16px 32px rgba(8,5,25,.6)}
 .book-title{margin-top:14px;font-size:clamp(12px,1.35vw,16px);font-weight:700;letter-spacing:.1em;text-shadow:0 2px 8px rgba(10,6,30,.9);word-break:keep-all}
 .book-sub{font-family:serif;font-size:clamp(7px,.8vw,10px);letter-spacing:.11em;color:#e6caa8;text-shadow:0 1px 5px #211539;white-space:nowrap}
-.library-record{position:relative;z-index:2;clear:both;width:min(100%,760px);max-width:760px;margin:36px auto 0;padding:24px 24px 22px;text-align:center;border:1px solid rgba(197,170,231,.34);background:linear-gradient(135deg,rgba(23,21,58,.9),rgba(44,31,79,.82));box-shadow:0 15px 42px rgba(0,0,0,.25)}
+.library-record{display:none;position:relative;z-index:2;clear:both;width:min(100%,760px);max-width:760px;min-height:168px;margin:36px auto 0;padding:24px 28px 22px 136px;text-align:left;border:1px solid rgba(197,170,231,.34);background:linear-gradient(135deg,rgba(23,21,58,.9),rgba(44,31,79,.82));box-shadow:0 15px 42px rgba(0,0,0,.25)}
+.library-record.is-open{display:block;animation:recordReveal .28s ease-out both}
+.library-librarian{position:absolute;z-index:3;left:-106px;top:-116px;width:clamp(170px,21vw,210px);height:auto;object-fit:contain;filter:drop-shadow(0 9px 13px rgba(9,5,31,.36));pointer-events:none}
+@keyframes recordReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .record-kicker{margin:0 0 9px;color:#d9c4fa;font-size:9px;letter-spacing:.3em}
 .library-record h3{margin:0 0 9px;font-family:serif;font-size:clamp(19px,2.5vw,25px);font-weight:400;letter-spacing:.08em;color:#fff0d9}
 .library-record p:last-child{margin:0;color:#c6c4df;font-size:13px;line-height:1.9}
-@media(max-width:600px){.library-section{padding:66px 12px 78px}.library-stage{width:100%;margin:28px auto 0;aspect-ratio:1672 / 941}.library-books{left:5%;top:51%;width:90%;height:33%;gap:2%}.library-book{padding:7px 2px 6px;gap:4px;border-left-width:3px;border-radius:3px 5px 5px 3px}.library-book:before{inset:5px 4px}.library-book:after{top:10%;font-size:10px}.book-title{margin-top:10px;font-size:clamp(9px,2.7vw,11px);letter-spacing:.015em}.book-sub{font-size:clamp(5px,1.45vw,7px);letter-spacing:.04em}.library-book:hover,.library-book:focus-visible,.library-book[aria-pressed="true"]{transform:translateY(-4px)}.library-record{margin-top:28px;padding:20px 14px 18px}.library-record p:last-child{font-size:12px;line-height:1.8}}
+@media(max-width:600px){.library-section{padding:66px 12px 78px}.library-stage{width:100%;margin:28px auto 0;aspect-ratio:1672 / 941}.library-books{left:5%;top:51%;width:90%;height:33%;gap:2%}.library-book{padding:7px 2px 6px;gap:4px;border-left-width:3px;border-radius:3px 5px 5px 3px}.library-book:before{inset:5px 4px}.library-book:after{top:10%;font-size:10px}.book-title{margin-top:10px;font-size:clamp(9px,2.7vw,11px);letter-spacing:.015em}.book-sub{font-size:clamp(5px,1.45vw,7px);letter-spacing:.04em}.library-book:hover,.library-book:focus-visible,.library-book[aria-pressed="true"]{transform:translateY(-4px)}.library-record{margin-top:28px;min-height:0;padding:72px 14px 18px;text-align:center}.library-librarian{left:-4px;top:-88px;width:120px}.library-record p:last-child{font-size:12px;line-height:1.8}}
 @media(prefers-reduced-motion:reduce){.library-book{transition:none}}
 
 footer{padding:35px 20px;text-align:center;border-top:1px solid rgba(200,220,255,.1);color:#7888ad;font-size:10px;letter-spacing:.15em}
@@ -72,6 +75,7 @@ footer{padding:35px 20px;text-align:center;border-top:1px solid rgba(200,220,255
 </div>
 </div>
 <div class="library-record" aria-live="polite">
+<img class="library-librarian" src="/star_library_librarian_seated.webp" alt="별빛 도서관의 사서">
 <p class="record-kicker">LIBRARY RECORD</p>
 <h3 id="library-record-title">서가에서 책을 선택해 주세요</h3>
 <p id="library-record-message">선택한 분야의 기록이 이곳에 표시됩니다.</p>
@@ -88,6 +92,7 @@ document.querySelectorAll('.library-book').forEach((book) => {
       item.setAttribute('aria-pressed', String(item === book));
     });
     document.getElementById('library-record-title').textContent = book.dataset.title + ' 기록';
+    document.querySelector('.library-record').classList.add('is-open');
     document.getElementById('library-record-message').textContent = '이 분류의 기록이 추가되면 이곳에서 확인할 수 있습니다.';
   });
 });
